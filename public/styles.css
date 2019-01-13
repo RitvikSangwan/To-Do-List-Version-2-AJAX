@@ -1,0 +1,15 @@
+body{
+	padding-top: 80px;
+
+}
+.navbar-inverse{
+    background-color: #2c3e50;
+}
+/* These selectors given below are present in bootstrap also but since our css file come after bootstrap.css ,
+ therefore the changes made in our file i.e.bootstrap image gallery.css will be reflected on the actual page */
+.navbar-inverse .navbar-nav>li>a {
+    color: white;
+}
+.navbar-inverse .navbar-brand {
+    color: white;
+}
