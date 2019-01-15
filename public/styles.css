@@ -13,3 +13,6 @@ body{
 .navbar-inverse .navbar-brand {
     color: white;
 }
+.edit-item-form{
+	display: none;
+}
