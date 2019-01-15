@@ -36,35 +36,38 @@ var Todo = mongoose.model("Todo", todoSchema);
  	res.redirect("/todos");
  });
  //INDEX ROUTE
-app.get("/todos",function(req,res){
-	Todo.find({}, function(err, allTodos){
-		if(err){
-			console.log(err);
-		}
-		else{
-			res.render("index",{todos:allTodos});
-		}
-	 });
+app.get("/todos", function(req, res){
+  Todo.find({}, function(err, todos){
+    if(err){
+      console.log(err);
+    } else {
+    //if(req.xhr) means if the request was sent via AJAX
+      if(req.xhr) {
+        res.json(todos);
+      } else {
+        res.render("index", {todos: todos}); 
+      }
+    }
+  })
 });
 
 //NEW ROUTE
 app.get("/todos/new",function(req,res){
     res.render("new");
 });
-
 //CREATE ROUTE
-app.post("/todos",function(req,res){
-    req.body.todo.text = req.sanitize(req.body.todo.text);
-    var formData = req.body.todo;
-    Todo.create(formData,function(err,newTodo){
-    	if(err){
-    		res.render("new");
-    	}
-    	else{
-    		res.redirect("/todos");
-    	}
-    })
+app.post("/todos", function(req, res){
+ req.body.todo.text = req.sanitize(req.body.todo.text);
+ var formData = req.body.todo;
+ Todo.create(formData, function(err, newTodo){
+    if(err){
+      res.render("new");
+    } else {
+          res.json(newTodo);
+    }
+  });
 });
+
 //EDIT ROUTE
 app.get("/todos/:id/edit", function(req, res){
  Todo.findById(req.params.id, function(err, todo){
@@ -78,11 +81,12 @@ app.get("/todos/:id/edit", function(req, res){
 });
 //UPDATE ROUTE
 app.put("/todos/:id", function(req, res){
- Todo.findByIdAndUpdate(req.params.id, req.body.todo, function(err, todo){
+	//{new:true} is used to tell the callback function that the todo is a newitem and not the original item
+ Todo.findByIdAndUpdate(req.params.id, req.body.todo, {new:true}, function(err, todo){
    if(err){
      console.log(err);
-   } else {
-      res.redirect('/');
+   } else{
+   	 	res.json(todo);
    }
  });
 });
@@ -92,8 +96,8 @@ app.delete("/todos/:id", function(req, res){
    if(err){
      console.log(err);
    } else {
-      res.redirect("/todos");
-   }
+   	res.json(todo);
+}
  }); 
 });
 
